@@ -45,6 +45,8 @@ export class IOSPlatform extends GeneralMobilePlatform {
         this.simulatorTarget = this.runOptions.target || IOSPlatform.simulatorString;
         this.isSimulator = this.simulatorTarget.toLowerCase() !== IOSPlatform.deviceString;
         this.iosProjectPath = path.join(this.projectPath, this.runOptions.iosRelativeProjectPath);
+		this.customScheme = this.runOptions.scheme || this.runOptions.iosRelativeProjectPath;
+        this.iphoneDeviceName = this.runOptions.iphonename;
     }
 
     public runApp(): Q.Promise<void> {
@@ -57,6 +59,30 @@ export class IOSPlatform extends GeneralMobilePlatform {
             }
 
             runArguments.push("--project-path", this.runOptions.iosRelativeProjectPath);
+            if (this.customScheme.toLowerCase() !== this.runOptions.iosRelativeProjectPath) {
+                runArguments.push("--scheme", this.customScheme); // useful when you set custom scheme name through XCode
+            }
+            const runIosSpawn = new CommandExecutor(this.projectPath).spawnReactCommand("run-ios", runArguments);
+            return new OutputVerifier(
+                () =>
+                    this.generateSuccessPatterns(),
+                () =>
+                    Q(IOSPlatform.RUN_IOS_FAILURE_PATTERNS)).process(runIosSpawn);
+        }
+		else if(this.simulatorTarget.toLowerCase() === IOSPlatform.deviceString &&
+                        this.iphoneDeviceName !== undefined)
+        {
+            // React native supports running on the iOS device from the command line -> react-native run-ios --device myiphonedevicename
+            // Note that code signing related all settings must be done through XCode for the first run. Once xcode settings are applied correctly, this case 
+            // would work well for subsequent running on device.
+            log_1.Log.logMessage('Running App on device with options : ' + JSON.stringify(this.runOptions)); 
+            let runArguments = [];
+
+            runArguments.push("--device", this.iphoneDeviceName); // iphone development device name exactly as displayed in XCode->Windows->Devices. 
+            if (this.customScheme.toLowerCase() !== this.runOptions.iosRelativeProjectPath) {
+                runArguments.push("--scheme", this.customScheme); // useful when you set custom scheme name through XCode
+            }
+             runArguments.push("--project-path", this.runOptions.iosRelativeProjectPath);
 
             const runIosSpawn = new CommandExecutor(this.projectPath).spawnReactCommand("run-ios", runArguments);
             return new OutputVerifier(

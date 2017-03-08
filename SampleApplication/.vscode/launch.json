@@ -1,6 +1,19 @@
 {
 	"version": "0.2.0",
 	"configurations": [
+
+        {
+            "name": "Debug iOS iphone",
+            "program": "${workspaceRoot}/.vscode/launchReactNative.js",
+            "type": "reactnative",
+            "request": "launch",
+            "platform": "ios",
+            "sourceMaps": true,
+            "target": "device", 
+            "outDir": "${workspaceRoot}/.vscode/.react",
+            "iphonename": "myiphonename", // to run on device with iphone device name
+            // "scheme": "myschemename"   // to build for custom scheme name
+        },
 		{
 			"name": "Debug Android",
 			"program": "${workspaceRoot}/.vscode/launchReactNative.js",

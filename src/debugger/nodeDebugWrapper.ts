@@ -138,6 +138,8 @@ export function makeSession(debugSessionClass: typeof ChromeDebuggerCorePackage.
             this.mobilePlatformOptions = {
                 projectRoot: this.projectRootPath,
                 platform: args.platform,
+                iphonename: args.iphonename,  // iphone development device name exactly as displayed in XCode->Windows->Devices. 
+                scheme: args.scheme, // useful when you set custom scheme name through XCode
             };
 
             // Start to send telemetry
