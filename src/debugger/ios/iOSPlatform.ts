@@ -45,7 +45,7 @@ export class IOSPlatform extends GeneralMobilePlatform {
         this.simulatorTarget = this.runOptions.target || IOSPlatform.simulatorString;
         this.isSimulator = this.simulatorTarget.toLowerCase() !== IOSPlatform.deviceString;
         this.iosProjectPath = path.join(this.projectPath, this.runOptions.iosRelativeProjectPath);
-		this.customScheme = this.runOptions.scheme || this.runOptions.iosRelativeProjectPath;
+		this.customScheme = this.runOptions.scheme;
         this.iphoneDeviceName = this.runOptions.iphonename;
     }
 
@@ -59,7 +59,7 @@ export class IOSPlatform extends GeneralMobilePlatform {
             }
 
             runArguments.push("--project-path", this.runOptions.iosRelativeProjectPath);
-            if (this.customScheme.toLowerCase() !== this.runOptions.iosRelativeProjectPath) {
+            if (this.customScheme !== undefined ) {
                 runArguments.push("--scheme", this.customScheme); // useful when you set custom scheme name through XCode
             }
             const runIosSpawn = new CommandExecutor(this.projectPath).spawnReactCommand("run-ios", runArguments);
@@ -79,7 +79,7 @@ export class IOSPlatform extends GeneralMobilePlatform {
             let runArguments = [];
 
             runArguments.push("--device", this.iphoneDeviceName); // iphone development device name exactly as displayed in XCode->Windows->Devices. 
-            if (this.customScheme.toLowerCase() !== this.runOptions.iosRelativeProjectPath) {
+            if (this.customScheme !== undefined) {
                 runArguments.push("--scheme", this.customScheme); // useful when you set custom scheme name through XCode
             }
              runArguments.push("--project-path", this.runOptions.iosRelativeProjectPath);
